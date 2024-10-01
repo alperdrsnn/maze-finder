@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>MazeFinder</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+
+        canvas {
+            border: 1px solid black;
+            margin-top: 20px;
+        }
+
+        #controls {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="controls">
+        <label for="algorithmSelect">Select Algorithm</label>
+        <select id="algorithmSelect">
+            <option value="bfs">Breadth-First Search</option>
+            <option value="dfs">Depth-First Search</option>
+        </select>
+        <label for="mazeSize">Maze Size</label>
+        <input type="number" id="mazeSize" value="20" min="5" max="50">
+        <button id="generateButton">Generate Maze</button>
+    </div>
+    <canvas id="mazeCanvas"></canvas>
+    <script src="script.js"></script>
+</body>
+</html>
