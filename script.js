@@ -141,10 +141,11 @@ class Maze {
         let algorithm = document.getElementById('algorithmSelect').value;
 
         if (algorithm === 'bfs') {
-            console.log('test');
             this.solveWithBFS();
         } else if (algorithm === 'dfs') {
             this.solveWithDFS();
+        } else if (algorithm === 'astar') {
+            this.solveWithAStar();
         }
     }
 
@@ -238,6 +239,70 @@ class Maze {
                 }
             }
         }
+    }
+
+    solveWithAStar() {
+        let openSet = [];
+        let closedSet = new Set();
+        let startCell = this.grid[0][0];
+        let endCell = this.grid[this.rows - 1][this.cols - 1];
+        let cameFrom = new Map();
+
+        for (let row of this.grid) {
+            for (let cell of row) {
+                cell.g = Infinity;
+                cell.h = 0;
+                cell.f = Infinity;
+                cell.visited = false;
+            }
+        }
+
+        startCell.g = 0;
+        startCell.h = this.heuristic(startCell, endCell);
+        startCell.f = startCell.h;
+
+        openSet.push(startCell);
+
+        while (openSet.length > 0) {
+            let current = openSet.reduce((lowest, cell) => {
+                return (cell.f < lowest.f) ? cell : lowest;
+            }, openSet[0]);
+
+            if (current === endCell) {
+                this.animateSolution(cameFrom, endCell);
+                return;
+            }
+
+            openSet = openSet.filter(cell => cell !== current);
+            closedSet.add(current);
+
+            let neighbors = this.getNeighbors(current);
+
+            for (let neighbor of neighbors) {
+                if (closedSet.has(neighbor)) {
+                    continue;
+                }
+
+                let tentativeG = current.g + 1;
+
+                if (!openSet.includes(neighbor)) {
+                    openSet.push(neighbor);
+                } else if (tentativeG >= neighbor.g) {
+                    continue;
+                }
+
+                cameFrom.set(neighbor, current);
+                neighbor.g = tentativeG;
+                neighbor.h = this.heuristic(neighbor, endCell);
+                neighbor.f = neighbor.g + neighbor.h;
+            }
+        }
+
+        console.log('No solution found.');
+    }
+
+    heuristic(a, b) {
+        return Math.abs(a.row - b.row) + Math.abs(a.col - b.col);
     }
 }
 
